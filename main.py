@@ -33,6 +33,7 @@ class VoxelEngine:
         # lock mouse pointer within window
         pg.mouse.set_visible(False)
         pg.event.set_grab(True)
+        
         # set its position to center of window
         pg.mouse.set_pos([WIN_RES.x / 2, WIN_RES.y / 2])
 
