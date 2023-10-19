@@ -9,6 +9,7 @@ class Chunk:
         self.m_model = self.get_model_matrix()
         self.voxels: np.array = None
         self.mesh: ChunkMesh = None
+        self.is_empty = True
 
     def get_model_matrix(self):
         m_model = glm.translate(glm.mat4(), glm.vec3(self.position) * CHUNK_SIZE)
@@ -21,8 +22,10 @@ class Chunk:
         self.mesh = ChunkMesh(self)
 
     def render(self):
-        self.set_uniform()
-        self.mesh.render()
+        # if any voxel exists in this chunk, render the chunk
+        if not self.is_empty:
+            self.set_uniform()
+            self.mesh.render()
 
     def build_voxels(self):
         # create an empty chunk
@@ -35,7 +38,7 @@ class Chunk:
 
         for x in range(CHUNK_SIZE):
             for z in range(CHUNK_SIZE):
-                # start getting world positions
+                # start getting world positions of chunk relative to other chunks
                 wx = x + cx
                 wz = z + cz
 
@@ -46,5 +49,9 @@ class Chunk:
                 for y in range(local_height):
                     wy = y + cy
                     voxels[x + CHUNK_SIZE * z + CHUNK_AREA * y] = wy + 1
+
+        # if any voxels exits in this chunk, the chunk is not empty
+        if np.any(voxels):
+            self.is_empty = False
                 
         return voxels

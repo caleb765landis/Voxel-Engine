@@ -17,6 +17,10 @@ class ChunkMesh(BaseMesh):
     def get_vertex_data(self):
         mesh = build_chunk_mesh(
             chunk_voxels = self.chunk.voxels,
-            format_size = self.format_size
+            format_size = self.format_size,
+
+            # take into account neighboring chunks
+            chunk_pos = self.chunk.position,
+            world_voxels = self.chunk.world.voxels
         )
         return mesh
