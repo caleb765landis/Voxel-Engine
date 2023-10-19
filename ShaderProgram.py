@@ -4,6 +4,7 @@ class ShaderProgram:
     def __init__(self, app):
         self.app = app
         self.ctx = app.ctx
+        self.player = app.player
         
         # shaders
         self.quad = self.get_program(shader_name='quad')
@@ -12,10 +13,11 @@ class ShaderProgram:
         self.set_uniforms_on_init()
     
     def set_uniforms_on_init(self):
-        pass
+        self.quad['m_proj'].write(self.player.m_proj)
+        self.quad['m_model'].write(glm.mat4())
 
     def update(self):
-        pass
+        self.quad['m_view'].write(self.player.m_view)
 
     def get_program(self, shader_name):
         # load shaders
