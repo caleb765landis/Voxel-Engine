@@ -2,6 +2,7 @@ from settings import *
 from ShaderProgram import ShaderProgram
 from Scene import Scene
 from Player import Player
+from Textures import Textures
 import moderngl as mgl
 import pygame as pg
 import sys
@@ -17,8 +18,11 @@ class VoxelEngine:
         pg.display.gl_set_attribute(pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE)
         pg.display.gl_set_attribute(pg.GL_DEPTH_SIZE, 24)
 
-        # set window resolution and create OpenGL context
+        # set window resolution
         pg.display.set_mode(WIN_RES, flags=pg.OPENGL | pg.DOUBLEBUF)
+        pg.display.toggle_fullscreen()
+
+        # create OpenGL context
         self.ctx = mgl.create_context()
         self.ctx.enable(flags=mgl.DEPTH_TEST | mgl.CULL_FACE | mgl.BLEND)
 
@@ -43,6 +47,9 @@ class VoxelEngine:
         self.on_init()
 
     def on_init(self):
+        # initialize textures
+        self.textures = Textures(self)
+
         # intitialize player
         self.player = Player(self)
         
