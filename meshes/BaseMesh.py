@@ -12,8 +12,8 @@ class BaseMesh:
         self.vbo_format = None
 
         # attribute names according to the format: ("in_position", "in_color")
-        # or attribute names according to the format: ('in_position', 'voxel_id', 'face_id')
-        self.attributes: tuple[str, ...] = ('in_position', 'voxel_id', 'face_id')
+        # or attribute names according to the format: ('in_position', 'voxel_id', 'face_id', 'ao_id', 'flip_id')
+        self.attributes: tuple[str, ...] = ('in_position', 'voxel_id', 'face_id', 'ao_id', 'flip_id')
 
         # vertex array object
         self.vao = None
