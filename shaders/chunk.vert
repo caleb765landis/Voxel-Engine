@@ -1,10 +1,12 @@
 #version 330 core
 
-layout (location = 0) in ivec3 in_position;
-layout (location = 1) in int voxel_id;
-layout (location = 2) in int face_id;
-layout (location = 3) in int ao_id;
-layout (location = 4) in int flip_id;
+layout (location = 0) in uint packed_data;
+
+int x, y, z;
+int voxel_id;
+int face_id;
+int ao_id;
+int flip_id;
 
 uniform mat4 m_proj;
 uniform mat4 m_view;
@@ -42,8 +44,36 @@ vec3 hash31(float p) {
     return fract((p3.xxy + p3.yzz) * p3.zyx) + 0.05;
 }
 
+void unpack(uint packed_data) {
+    // a, b, c, d, e, f, g = x, y, z, voxel_id, face_id, ao_id, flip_id
+    uint b_bit = 6u, c_bit = 6u, d_bit = 8u, e_bit = 3u, f_bit = 2u, g_bit = 1u;
+
+    // unpacked data original sizes
+    uint b_mask = 63u, c_mask = 63u, d_mask = 255u, e_mask = 7u, f_mask = 3u, g_mask = 1u;
+
+    // calculate length of bits that each attribute needs for bitwise shift
+    uint fg_bit = f_bit + g_bit;
+    uint efg_bit = e_bit + fg_bit;
+    uint defg_bit = d_bit + efg_bit;
+    uint cdefg_bit = c_bit + defg_bit;
+    uint bcdefg_bit = b_bit + cdefg_bit;
+
+    // unpack vertex data by bitwise shifting and applying a mask to clear other data
+    x = int(packed_data >> bcdefg_bit);
+    y = int((packed_data >> cdefg_bit) & b_mask);
+    z = int((packed_data >> defg_bit) & c_mask);
+    voxel_id = int((packed_data >> efg_bit) & d_mask);
+    face_id = int((packed_data >> fg_bit) & e_mask);
+    ao_id = int((packed_data >> g_bit) & f_mask);
+    flip_id = int(packed_data & g_mask);
+}
+
 
 void main() {
+    // unpack data so we can get original values in original sizes
+    unpack(packed_data);
+    vec3 in_position = vec3(x, y, z);
+
     // gl_VertexID % 6 gets ordinal number of the vertex
     // the rest of this line checks if face_id is even or not, which gets position of the vertex in uv_indices
     int uv_index = gl_VertexID % 6  + ((face_id & 1) + flip_id * 2) * 6;
