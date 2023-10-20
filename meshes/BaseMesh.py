@@ -8,12 +8,12 @@ class BaseMesh:
         # shader program
         self.program = None
 
-        # vbo format of unsigned 32 bit datatype
-        self.vbo_format = '1u4'
+        self.vbo_format = None
 
         # attribute names according to the format: ("in_position", "in_color")
         # or attribute names according to the format: ('packed_data',)
-        self.attributes: tuple[str, ...] = ('packed_data',)
+        # self.attributes: tuple[str, ...] = ('packed_data',)
+        self.attributes: tuple[str, ...] = None
 
         # vertex array object
         self.vao = None

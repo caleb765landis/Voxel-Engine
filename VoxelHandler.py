@@ -41,11 +41,38 @@ class VoxelHandler:
     def remove_voxel(self):
         if self.voxel_id:
             self.chunk.voxels[self.voxel_index] = 0
-
             self.chunk.mesh.rebuild()
+
+            # rebuild adjacent chunks if this voxel is on the edge of current chunk
+            # this way it rebuilds faces outside of this chunk that are now exposed
+            self.rebuild_adjacent_chunks()
 
     def switch_mode(self):
         self.interaction_mode = not self.interaction_mode
+
+    def rebuild_adjacent_chunks(self):
+        lx, ly, lz = self.voxel_local_pos
+        wx, wy, wz = self.voxel_world_pos
+
+        if lx == 0:
+            self.rebuild_adj_chunk((wx - 1, wy, wz))
+        elif lx == CHUNK_SIZE - 1:
+            self.rebuild_adj_chunk((wx + 1, wy, wz))
+        
+        if ly == 0:
+            self.rebuild_adj_chunk((wx, wy - 1, wz))
+        elif ly == CHUNK_SIZE - 1:
+            self.rebuild_adj_chunk((wx, wy + 1, wz))
+
+        if lz == 0:
+            self.rebuild_adj_chunk((wx, wy, wz - 1))
+        elif lz == CHUNK_SIZE - 1:
+            self.rebuild_adj_chunk((wx, wy, wz + 1))
+
+    def rebuild_adj_chunk(self, adj_voxel_pos):
+        index = get_chunk_index(adj_voxel_pos)
+        if index != -1:
+            self.chunks [index].mesh.rebuild()
 
     def update(self):
         self.ray_cast()

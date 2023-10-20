@@ -12,7 +12,7 @@ class ChunkMesh(BaseMesh):
         # vbo format of unsigned 32 bit datatype
         self.vbo_format = '1u4'
         self.format_size = sum(int(fmt[:1]) for fmt in self.vbo_format.split())
-        self.attrs = ('packed_data',)
+        self.attributes = ('packed_data',)
         self.vao = self.get_vao()
 
     def rebuild(self):
