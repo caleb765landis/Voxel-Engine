@@ -91,6 +91,7 @@ class VoxelEngine:
             # check if user is quitting game
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 self.is_running = False
+            self.player.handle_event(event=event)
 
     def run(self):
         # while engine is running, handle events, update attributes, and render new values in a new frame

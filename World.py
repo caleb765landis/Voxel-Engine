@@ -1,5 +1,6 @@
 from settings import *
 from world_objects.Chunk import Chunk
+from VoxelHandler import VoxelHandler
 
 class World:
     def __init__(self, app):
@@ -13,6 +14,7 @@ class World:
 
         self.build_chunks()
         self.build_chunk_mesh()
+        self.voxel_handler = VoxelHandler(self)
 
     def build_chunks(self):
         for x in range(WORLD_W):
@@ -34,7 +36,7 @@ class World:
             chunk.build_mesh()
 
     def update(self):
-        pass
+        self.voxel_handler.update()
 
     def render(self):
         for chunk in self.chunks:
