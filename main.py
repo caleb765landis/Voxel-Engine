@@ -20,7 +20,7 @@ class VoxelEngine:
 
         # set window resolution
         pg.display.set_mode(WIN_RES, flags=pg.OPENGL | pg.DOUBLEBUF)
-        # pg.display.toggle_fullscreen()
+        pg.display.toggle_fullscreen()
 
         # create OpenGL context
         self.ctx = mgl.create_context()

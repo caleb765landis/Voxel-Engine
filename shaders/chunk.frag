@@ -2,7 +2,7 @@
 
 layout (location = 0) out vec4 fragColor;
 
-const vec3 gamma = vec3(2.2);
+const vec3 gamma = vec3(1.3);
 const vec3 inv_gamma = 1 / gamma;
 
 uniform sampler2DArray u_texture_array_0;

@@ -1,4 +1,5 @@
 from settings import *
+from TerrainGen import *
 from meshes.ChunkMesh import ChunkMesh
 import random
 
@@ -39,8 +40,17 @@ class Chunk:
 
         # chunk position
         cx, cy, cz = glm.ivec3(self.position) * CHUNK_SIZE
-        rng = random.randrange(1, 100)
+        self.generate_terrain(voxels, cx, cy, cz)
 
+        # if any voxels exits in this chunk, the chunk is not empty
+        if np.any(voxels):
+            self.is_empty = False
+                
+        return voxels
+    
+    @staticmethod
+    @njit
+    def generate_terrain(voxels, cx, cy, cz):
         for x in range(CHUNK_SIZE):
             for z in range(CHUNK_SIZE):
                 # start getting world positions of chunk relative to other chunks
@@ -48,15 +58,9 @@ class Chunk:
                 wz = z + cz
 
                 # uses simplex function for 3d noise when filling voxels
-                world_height = int(glm.simplex(glm.vec2(wx, wz) * 0.01) * 32 + 32)
+                world_height = get_height(wx, wz)
                 local_height = min(world_height - cy, CHUNK_SIZE)
 
                 for y in range(local_height):
                     wy = y + cy
-                    voxels[x + CHUNK_SIZE * z + CHUNK_AREA * y] = 2
-
-        # if any voxels exits in this chunk, the chunk is not empty
-        if np.any(voxels):
-            self.is_empty = False
-                
-        return voxels
+                    set_voxel_id(voxels, x, y, z, wx, wy, wz, world_height)
