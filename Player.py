@@ -31,6 +31,7 @@ class Player(Camera):
     Up: e
     Down: q
     Looking: mouse
+    Toggle FullScreen: o
     '''
     def keyboard_control(self):
         key_state = pg.key.get_pressed()
@@ -48,6 +49,8 @@ class Player(Camera):
             self.move_up(velocity)
         if key_state[pg.K_q]:
             self.move_down(velocity)
+        if key_state[pg.K_o]:
+            pg.display.toggle_fullscreen()
     
     def mouse_control(self):
         mouse_dx, mouse_dy = pg.mouse.get_rel()
