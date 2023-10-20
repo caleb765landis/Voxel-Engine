@@ -53,7 +53,7 @@ class Chunk:
 
                 for y in range(local_height):
                     wy = y + cy
-                    voxels[x + CHUNK_SIZE * z + CHUNK_AREA * y] = rng
+                    voxels[x + CHUNK_SIZE * z + CHUNK_AREA * y] = 2
 
         # if any voxels exits in this chunk, the chunk is not empty
         if np.any(voxels):
